@@ -1,5 +1,7 @@
+image: archlinux/base
+
 before_script:
-  - apt-get update -qq && apt-get install -y -qq emacs
+  - pacman -Syu make emacs --noconfirm
   - emacs --version
 
 test:
