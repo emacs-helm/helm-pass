@@ -3,6 +3,9 @@
 #+EMAIL: branham@utexas.edu
 #+LANGUAGE: en-us
 
+#+NAME: pipeline-status
+[[https://gitlab.com/jabranham/helm-pass/badges/master/pipeline.svg]]
+
 Helm-pass is a [[https://emacs-helm.github.io/helm/][helm]] interface for [[https://www.passwordstore.org/][pass]], the standard unix password
 manager. 
 
