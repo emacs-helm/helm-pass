@@ -1,4 +1,4 @@
-EMACS ?= emacs-snapshot
+EMACS ?= emacs
 EMACS_FLAGS =  --load test/emacs-env.el --directory .
 EMACS_BATCH = $(EMACS) --batch $(EMACS_FLAGS)
 
