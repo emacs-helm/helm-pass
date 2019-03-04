@@ -4,7 +4,7 @@
 
 ;; Author: J. Alexander Branham <branham@utexas.edu>
 ;; Maintainer: J. Alexander Branham <branham@utexas.edu>
-;; URL: https://github.com/jabranham/helm-pass
+;; URL: https://gitlab.com/jabranham/helm-pass
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25") (helm "0") (password-store "0") (auth-source-pass "4.0.0"))
 
