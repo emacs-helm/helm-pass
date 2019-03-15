@@ -18,6 +18,12 @@ load it, assuming you use the excellent [[https://github.com/jwiegley/use-packag
   (use-package helm-pass)
 #+END_SRC
 
+or, in standard Emacs:
+
+#+begin_src emacs-lisp
+(require 'helm-pass)
+#+end_src
+
 * Usage
   
 The main command is ~helm-pass~ which will list all the passwords that
