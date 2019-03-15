@@ -52,6 +52,11 @@
 (require 'helm)
 (require 'password-store)
 (require 'auth-source-pass)
+(require 'thingatpt)
+(require 'seq)
+
+(defvar exwm-title)
+(declare-function eww-current-url "eww")
 
 (defgroup helm-pass nil
   "Emacs helm interface for helm-pass"
@@ -81,11 +86,65 @@ Does not clear it from clipboard."
     :candidates #'password-store-list
     :action helm-pass-actions))
 
+(defun helm-pass-find-url-in-string (string)
+  "Return URL from STRING."
+  (with-temp-buffer
+    (insert string)
+    (goto-char (point-min))
+    (while (and (not (eobp))
+                (not (thing-at-point-url-at-point)))
+      (forward-word))
+    (thing-at-point-url-at-point)))
+
+(defvar helm-pass-domain-regexp
+  (rx "//"
+      (group
+       (* (not (any "/")))
+       "."
+       (* (not (any "." "/"))))
+      "/"))
+
+(defun helm-pass-get-domain (url)
+  "Return the various domain elements or URL as a list of strings."
+  (when url
+    (string-match helm-pass-domain-regexp url)
+    (split-string (match-string 1 url) "\\.")))
+
+(defun helm-pass-get-subdomain (domain &optional count)
+  "Return the last COUNT elements of DOMAIN as a dot-separated string.
+COUNT defaults to 2.
+For instance, (\"foo\" \"example\" \"org\") results in \"example.org\".
+If domain does not have enough elements, return nil."
+  (setq count (or count 2))
+  (when (>= (length domain) count)
+    (mapconcat #'identity (seq-drop domain (- (length domain) count)) ".")))
+
+(defun helm-pass-get-input-from-eww ()
+  "Get default prompt from EWW."
+  (let* ((domain (helm-pass-get-domain (eww-current-url))))
+    (helm-pass-get-subdomain domain)))
+
+(defun helm-pass-get-input-from-exwm ()
+  "Get default prompt from the current EXWM window."
+  (when exwm-title
+    (let* ((url (helm-pass-find-url-in-string exwm-title))
+           (domain (helm-pass-get-domain url)))
+      (helm-pass-get-subdomain domain))))
+
+(defun helm-pass-get-input ()
+  "Get default prompt from the current mode."
+  (cond
+   ((derived-mode-p 'eww-mode)
+    (helm-pass-get-input-from-eww))
+   ((derived-mode-p 'exwm-mode)
+    (helm-pass-get-input-from-exwm))))
+
 ;;;###autoload
 (defun helm-pass ()
   "Helm interface for pass."
   (interactive)
   (helm :sources 'helm-pass-source-pass
+        :input (helm-pass-get-input)
         :buffer "*helm-pass*"))
 
 (provide 'helm-pass)
