@@ -1,10 +1,11 @@
 ;;; helm-pass.el --- helm interface of pass, the standard Unix password manager -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2016--2018 J. Alexander Branham
+;; Copyright (C) 2019 Pierre Neidhardt
 
 ;; Author: J. Alexander Branham <branham@utexas.edu>
-;; Maintainer: J. Alexander Branham <branham@utexas.edu>
-;; URL: https://gitlab.com/jabranham/helm-pass
+;; Maintainer: Pierre Neidhardt <mail@ambrevar.xyz>
+;; URL: https://github.com/emacs-helm/helm-pass
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25") (helm "0") (password-store "0") (auth-source-pass "4.0.0"))
 
