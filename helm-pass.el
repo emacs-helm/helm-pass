@@ -62,19 +62,24 @@
   "Emacs helm interface for helm-pass"
   :group 'helm)
 
-(defun helm-pass-get-username (entry)
-  "Get username for ENTRY.
+(defun helm-pass-get-fields (entry)
+  (mapcar 'car (auth-source-pass-parse-entry entry)))
+
+(defun helm-pass-get-field (key entry)
+  "Get the value associated with KEY for ENTRY.
 
 Does not clear it from clipboard."
-  (let ((username (auth-source-pass-get "user" entry)))
-    (if username
+  (if (string-equal key "secret")
+      (setq key 'secret))
+  (let ((field (auth-source-pass-get key entry)))
+    (if field
         (progn (password-store-clear)
-               (kill-new username))
-      (message "Username not found!"))))
+               (kill-new field))
+      (message (format "%s has no field: %s" entry field)))))
 
 (defcustom helm-pass-actions
   '(("Copy password to clipboard" . password-store-copy)
-    ("Copy username to clipboard" . helm-pass-get-username)
+    ("Copy field to clipboard" . helm-pass-fields)
     ("Edit entry" . password-store-edit)
     ("Browse url of entry" . password-store-url))
   "List of actions for `helm-pass'."
@@ -85,6 +90,11 @@ Does not clear it from clipboard."
   (helm-build-sync-source "Password File"
     :candidates #'password-store-list
     :action helm-pass-actions))
+
+(defun helm-pass-source-pass-fields (entry)
+  (helm-build-sync-source "Password Fields"
+    :candidates (helm-pass-get-fields entry)
+    :action (lambda (x) (helm-pass-get-field x entry))))
 
 (defun helm-pass-find-url-in-string (string)
   "Return URL from STRING."
@@ -146,6 +156,10 @@ If domain does not have enough elements, return nil."
   (helm :sources 'helm-pass-source-pass
         :input (helm-pass-get-input)
         :buffer "*helm-pass*"))
+
+(defun helm-pass-fields (arg)
+  (helm :sources (helm-pass-source-pass-fields arg)
+        :buffer "*helm-pass-fields*"))
 
 (provide 'helm-pass)
 ;;; helm-pass.el ends here
