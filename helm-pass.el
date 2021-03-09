@@ -81,7 +81,8 @@ Does not clear it from clipboard."
   '(("Copy password to clipboard" . password-store-copy)
     ("Copy field to clipboard" . helm-pass-fields)
     ("Edit entry" . password-store-edit)
-    ("Browse url of entry" . password-store-url))
+    ("Browse url of entry" . password-store-url)
+    ("Copy pass-name to clipboard" . kill-new))
   "List of actions for `helm-pass'."
   :group 'helm-pass
   :type '(alist :key-type string :value-type function))
